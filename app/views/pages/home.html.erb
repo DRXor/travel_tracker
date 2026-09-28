@@ -2,12 +2,22 @@
 
 <% if logged_in? %>
   <p>Привет, <%= current_user.name %>!</p>
+
+  <p>
+    <%= link_to "Мои поездки", trips_path %>
+  </p>
+
   <%= form_with url: logout_path, method: :delete, local: true do %>
     <%= submit_tag "Выйти" %>
   <% end %>
 <% else %>
   <p>
-    <%= link_to "Регистрация", signup_path %> |
+    Добро пожаловать в TravelTracker!
+  </p>
+
+  <p>
+    <%= link_to "Регистрация", signup_path %>
+    |
     <%= link_to "Войти", login_path %>
   </p>
 <% end %>

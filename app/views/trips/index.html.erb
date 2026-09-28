@@ -1,0 +1,52 @@
+<h1>Мои поездки</h1>
+
+<p>
+  <%= link_to "← На главную", root_path %>
+  |
+  <%= link_to "+ Создать поездку", new_trip_path %>
+</p>
+
+<% if @trips.empty? %>
+  <p>У вас пока нет поездок.</p>
+
+  <p>
+    <%= link_to "Создать первую поездку", new_trip_path %>
+  </p>
+<% else %>
+  <% @trips.each do |trip| %>
+    <article>
+      <h2>
+        <%= link_to trip.name, trip_path(trip) %>
+      </h2>
+
+      <p>
+        <strong>Направление:</strong>
+        <%= trip.destination %>
+      </p>
+
+      <p>
+        <strong>Даты:</strong>
+        <%= trip.start_date %>
+        —
+        <%= trip.end_date %>
+      </p>
+
+      <% if trip.description.present? %>
+        <p>
+          <%= trip.description %>
+        </p>
+      <% end %>
+
+      <p>
+        <%= link_to "Открыть", trip_path(trip) %>
+
+        <%= button_to "Удалить",
+                      trip_path(trip),
+                      method: :delete,
+                      data: { turbo_confirm: "Удалить эту поездку?" } %>
+      </p>
+    </article>
+
+    <hr>
+  <% end %>
+<% end %>

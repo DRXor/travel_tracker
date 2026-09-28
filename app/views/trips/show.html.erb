@@ -1,0 +1,39 @@
+<h1><%= @trip.name %></h1>
+
+<p>
+  <strong>Направление:</strong>
+  <%= @trip.destination %>
+</p>
+
+<p>
+  <strong>Дата начала:</strong>
+  <%= @trip.start_date %>
+</p>
+
+<p>
+  <strong>Дата окончания:</strong>
+  <%= @trip.end_date %>
+</p>
+
+<% if @trip.description.present? %>
+  <p>
+    <strong>Описание:</strong>
+  </p>
+
+  <p>
+    <%= @trip.description %>
+  </p>
+<% end %>
+
+<hr>
+
+<p>
+  <%= link_to "← Мои поездки", trips_path %>
+</p>
+
+<p>
+  <%= button_to "Удалить поездку",
+                trip_path(@trip),
+                method: :delete,
+                data: { turbo_confirm: "Удалить эту поездку?" } %>
+</p>
