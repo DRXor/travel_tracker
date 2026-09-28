@@ -1,0 +1,19 @@
+<h1>Вход</h1>
+
+<% if flash[:alert] %>
+  <p class="error"><%= flash[:alert] %></p>
+<% end %>
+
+<%= form_with url: login_path, local: true do |f| %>
+  <div>
+    <label>Email</label>
+    <%= f.email_field :email, required: true %>
+  </div>
+  <div>
+    <label>Пароль</label>
+    <%= f.password_field :password, required: true %>
+  </div>
+  <%= f.submit "Войти" %>
+<% end %>
+
+<p>Нет аккаунта? <%= link_to "Зарегистрироваться", signup_path %></p>

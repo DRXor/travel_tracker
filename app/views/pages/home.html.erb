@@ -1,0 +1,13 @@
+<h1>TravelTracker</h1>
+
+<% if logged_in? %>
+  <p>Привет, <%= current_user.name %>!</p>
+  <%= form_with url: logout_path, method: :delete, local: true do %>
+    <%= submit_tag "Выйти" %>
+  <% end %>
+<% else %>
+  <p>
+    <%= link_to "Регистрация", signup_path %> |
+    <%= link_to "Войти", login_path %>
+  </p>
+<% end %>
