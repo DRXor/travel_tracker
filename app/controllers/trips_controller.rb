@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   before_action :require_login
-  before_action :set_trip, only: [:show, :destroy]
+  before_action :set_trip, only: [ :show, :destroy ]
 
   def index
     @trips = current_user.trips.order(start_date: :asc)
