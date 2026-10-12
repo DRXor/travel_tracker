@@ -1,52 +1,30 @@
-<h1>Мои поездки</h1>
+<% content_for :title, "Мои поездки — TravelTracker" %>
 
-<p>
-  <%= link_to "← На главную", root_path %>
-  |
-  <%= link_to "+ Создать поездку", new_trip_path %>
-</p>
+<div class="page-heading">
+  <div>
+    <p class="ui-kit__eyebrow">Твоя коллекция путешествий</p>
+    <h1>Мои поездки</h1>
+    <p>Все твои планы и направления в одном месте.</p>
+  </div>
+
+  <%= link_to "＋ Создать поездку", new_trip_path, class: "button" %>
+</div>
 
 <% if @trips.empty? %>
-  <p>У вас пока нет поездок.</p>
-
-  <p>
-    <%= link_to "Создать первую поездку", new_trip_path %>
-  </p>
+  <section class="card" style="text-align: center; padding: 40px 24px;">
+    <div style="font-size: 2.5rem; margin-bottom: 12px;" aria-hidden="true">✈</div>
+    <h2>Пока нет поездок</h2>
+    <p>Создай первую поездку — и здесь появятся твои планы.</p>
+    <div class="inline-actions" style="justify-content: center;">
+      <%= link_to "Создать первую поездку", new_trip_path, class: "button" %>
+    </div>
+  </section>
 <% else %>
-  <% @trips.each do |trip| %>
-    <article>
-      <h2>
-        <%= link_to trip.name, trip_path(trip) %>
-      </h2>
-
-      <p>
-        <strong>Направление:</strong>
-        <%= trip.destination %>
-      </p>
-
-      <p>
-        <strong>Даты:</strong>
-        <%= trip.start_date %>
-        —
-        <%= trip.end_date %>
-      </p>
-
-      <% if trip.description.present? %>
-        <p>
-          <%= trip.description %>
-        </p>
-      <% end %>
-
-      <p>
-        <%= link_to "Открыть", trip_path(trip) %>
-
-        <%= button_to "Удалить",
-                      trip_path(trip),
-                      method: :delete,
-                      data: { turbo_confirm: "Удалить эту поездку?" } %>
-      </p>
-    </article>
-
-    <hr>
-  <% end %>
+  <div class="card-grid">
+    <%= render partial: "trip_card", collection: @trips, as: :trip %>
+  </div>
 <% end %>
+
+<p style="margin-top: 28px;">
+  <%= link_to "← На главную", root_path %>
+</p>

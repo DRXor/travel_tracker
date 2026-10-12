@@ -1,0 +1,221 @@
+/* Дополнительные стили UI Kit: состояния, элементы выбора, форма остановок, прогресс */
+
+.ui-kit__label {
+  margin: 0 0 10px;
+  font-size: .875rem;
+  font-weight: 600;
+  color: #5b6080;
+}
+
+/* Состояния кнопок */
+.button:disabled,
+.button[disabled] {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.button.is-loading {
+  position: relative;
+  pointer-events: none;
+  padding-right: 44px;
+}
+
+.button.is-loading::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border: 2px solid rgba(255, 255, 255, .5);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: button-spin .7s linear infinite;
+}
+
+@keyframes button-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button.is-loading::after { animation-duration: 2s; }
+}
+
+/* Видимый фокус для клавиатуры */
+.button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(87, 84, 217, .35);
+  outline-offset: 2px;
+}
+
+/* Состояния полей */
+.field--error input,
+.field--error select,
+.field--error textarea {
+  border-color: #c62828;
+  background: #fff5f5;
+}
+
+.field-error {
+  margin: 6px 0 0;
+  font-size: .875rem;
+  color: #c62828;
+}
+
+.field--success input {
+  border-color: #18794e;
+}
+
+.field-success {
+  margin: 6px 0 0;
+  font-size: .875rem;
+  color: #18794e;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background: #eceef5;
+  color: #7b8099;
+  cursor: not-allowed;
+}
+
+/* Radio, checkbox, переключатель */
+.choice-group {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choice-group legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font-weight: 600;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.choice input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #5754d9;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.switch input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.switch__track {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: #c9cce0;
+  transition: background .2s;
+}
+
+.switch__track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform .2s;
+}
+
+.switch input:checked + .switch__track {
+  background: #5754d9;
+}
+
+.switch input:checked + .switch__track::after {
+  transform: translateX(18px);
+}
+
+.switch input:focus-visible + .switch__track {
+  outline: 3px solid rgba(87, 84, 217, .35);
+  outline-offset: 2px;
+}
+
+/* Форма поездки */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+.stops {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.stop-row {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.stop-row__number {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #5754d9;
+  color: #fff;
+  font-size: .875rem;
+  font-weight: 600;
+}
+
+/* Прогресс и отменённая карточка */
+.progress {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e4e6f2;
+}
+
+.progress__bar {
+  height: 100%;
+  border-radius: 999px;
+  background: #5754d9;
+}
+
+.trip-card--cancelled .trip-card__title,
+.trip-card--cancelled .trip-card__dates {
+  text-decoration: line-through;
+  text-decoration-color: rgba(198, 40, 40, .5);
+}
+
+.trip-card__footer .inline-actions {
+  gap: 8px;
+}

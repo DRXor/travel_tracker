@@ -1,23 +1,68 @@
-<h1>TravelTracker</h1>
+<% content_for :title, "TravelTracker — планируй путешествия" %>
+
+<section class="ui-kit__hero">
+  <p class="ui-kit__eyebrow">Твои путешествия начинаются здесь</p>
+
+  <% if logged_in? %>
+    <h1>Рады видеть тебя, <%= current_user.name %>!</h1>
+    <p>
+      Продолжай планировать поездки, сохраняй направления
+      и собирай все свои путешествия в одном месте.
+    </p>
+
+    <div class="inline-actions" style="margin-top: 24px;">
+      <%= link_to "Мои поездки", trips_path, class: "button" %>
+      <%= link_to "Создать поездку", new_trip_path,
+                  class: "button button--secondary" %>
+    </div>
+  <% else %>
+    <h1>Мир большой. Пора его исследовать.</h1>
+    <p>
+      Планируй путешествия, сохраняй интересные направления
+      и собирай свои маршруты в одном удобном месте.
+    </p>
+
+    <div class="inline-actions" style="margin-top: 24px;">
+      <%= link_to "Начать планировать", signup_path, class: "button" %>
+      <%= link_to "У меня уже есть аккаунт", login_path,
+                  class: "button button--secondary" %>
+    </div>
+  <% end %>
+</section>
+
+<section class="section">
+  <div class="page-heading">
+    <div>
+      <h2>Всё для твоих путешествий</h2>
+      <p>От первой идеи до готового плана поездки.</p>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <article class="card">
+      <span class="badge badge--primary">01 · Планирование</span>
+      <h3 style="margin-top: 16px;">Собирай поездки</h3>
+      <p>
+        Сохраняй название, направление, даты и описание
+        каждой поездки.
+      </p>
+    </article>
+
+    <article class="card">
+      <span class="badge badge--success">02 · Организация</span>
+      <h3 style="margin-top: 16px;">Храни всё в одном месте</h3>
+      <p>
+        Возвращайся к своим планам и просматривай
+        подробности путешествий.
+      </p>
+    </article>
+  </div>
+</section>
 
 <% if logged_in? %>
-  <p>Привет, <%= current_user.name %>!</p>
-
-  <p>
-    <%= link_to "Мои поездки", trips_path %>
-  </p>
-
-  <%= form_with url: logout_path, method: :delete, local: true do %>
-    <%= submit_tag "Выйти" %>
-  <% end %>
-<% else %>
-  <p>
-    Добро пожаловать в TravelTracker!
-  </p>
-
-  <p>
-    <%= link_to "Регистрация", signup_path %>
-    |
-    <%= link_to "Войти", login_path %>
-  </p>
+  <section class="section card">
+    <h2>Готовы к следующему приключению?</h2>
+    <p>Создай новую поездку и начни собирать планы.</p>
+    <%= link_to "＋ Новая поездка", new_trip_path, class: "button" %>
+  </section>
 <% end %>

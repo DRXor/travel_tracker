@@ -1,0 +1,31 @@
+<article class="trip-card">
+  <div>
+    <p class="trip-card__destination">
+      <%= trip.destination %>
+    </p>
+
+    <h2 class="trip-card__title">
+      <%= link_to trip.name, trip_path(trip) %>
+    </h2>
+  </div>
+
+  <p class="trip-card__dates">
+    <%= trip.start_date&.strftime("%d.%m.%Y") || "Дата не указана" %>
+    —
+    <%= trip.end_date&.strftime("%d.%m.%Y") || "Дата не указана" %>
+  </p>
+
+  <% if trip.description.present? %>
+    <p><%= trip.description %></p>
+  <% end %>
+
+  <div class="trip-card__footer">
+    <%= link_to "Подробнее →", trip_path(trip), class: "button button--secondary button--small" %>
+
+    <%= button_to "Удалить",
+                  trip_path(trip),
+                  method: :delete,
+                  class: "button button--danger button--small",
+                  data: { turbo_confirm: "Удалить эту поездку?" } %>
+  </div>
+</article>

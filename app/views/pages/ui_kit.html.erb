@@ -1,0 +1,458 @@
+<% content_for :title, "UI Kit — TravelTracker" %>
+
+<div class="ui-kit">
+  <section class="ui-kit__hero">
+    <p class="ui-kit__eyebrow">TravelTracker · Design system</p>
+    <h1>UI Kit</h1>
+    <p>
+      Библиотека элементов интерфейса для планирования путешествий.
+      Здесь собраны цвета, типографика, кнопки, формы, карточки и маршруты,
+      которые используются в приложении.
+    </p>
+    <div class="inline-actions" style="margin-top: 24px;">
+      <%= link_to "Мои поездки", trips_path, class: "button" if logged_in? %>
+      <%= link_to "На главную", root_path, class: "button button--secondary" %>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="colors">
+    <h2>01. Цвета</h2>
+    <p>Основная палитра приложения.</p>
+
+    <div class="ui-kit__swatches">
+      <div class="swatch">
+        <div class="swatch__color" style="background: #5754d9;"></div>
+        <div class="swatch__label">Primary<br>#5754D9</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__color" style="background: #20243a;"></div>
+        <div class="swatch__label">Text<br>#20243A</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__color" style="background: #f6f7fb;"></div>
+        <div class="swatch__label">Background<br>#F6F7FB</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__color" style="background: #18794e;"></div>
+        <div class="swatch__label">Success<br>#18794E</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch__color" style="background: #c62828;"></div>
+        <div class="swatch__label">Danger<br>#C62828</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="typography">
+    <h2>02. Типографика</h2>
+    <p>Иерархия заголовков и текстов.</p>
+
+    <div class="card stack">
+      <div>
+        <span class="badge badge--primary">H1 · 32–45 px</span>
+        <h1 style="margin-top: 12px;">Открой новое место</h1>
+      </div>
+      <div>
+        <span class="badge">H2 · 26 px</span>
+        <h2 style="margin-top: 12px;">Твои путешествия</h2>
+      </div>
+      <div>
+        <span class="badge">H3 · 18 px</span>
+        <h3 style="margin-top: 12px;">Путешествие в Париж</h3>
+      </div>
+      <div>
+        <span class="badge">Body · 15 px</span>
+        <p style="margin-top: 12px;">
+          Планируй поездки, сохраняй направления и собирай
+          все детали путешествия в одном месте.
+        </p>
+        <p class="text-small muted" style="margin-bottom: 0;">
+          Вспомогательный текст — для дат, подсказок и метаданных.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="buttons">
+    <h2>03. Кнопки</h2>
+    <p>Варианты, размеры и состояния кнопок.</p>
+
+    <div class="card stack">
+      <div>
+        <p class="ui-kit__label">Варианты</p>
+        <div class="ui-kit__demo">
+          <button type="button" class="button">Основное действие</button>
+          <button type="button" class="button button--secondary">Вторичное</button>
+          <button type="button" class="button button--ghost">Текстовая кнопка</button>
+          <button type="button" class="button button--danger">Удалить</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="ui-kit__label">Размеры</p>
+        <div class="ui-kit__demo">
+          <button type="button" class="button button--small">Маленькая</button>
+          <button type="button" class="button">Обычная</button>
+          <button type="button" class="button button--large">Большая</button>
+        </div>
+      </div>
+
+      <div>
+        <p class="ui-kit__label">Состояния</p>
+        <div class="ui-kit__demo">
+          <button type="button" class="button">Обычная</button>
+          <button type="button" class="button" disabled>Недоступна</button>
+          <button type="button" class="button is-loading" aria-busy="true">Сохраняем…</button>
+          <button type="button" class="button button--secondary" disabled>Вторичная недоступна</button>
+          <button type="button" class="button button--danger" disabled>Удалить</button>
+        </div>
+        <p class="field-hint">Наведение и фокус смотрите курсором и клавишей Tab.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="badges">
+    <h2>04. Метки и статусы</h2>
+    <p>Для категорий, состояния поездки и коротких обозначений.</p>
+
+    <div class="card">
+      <div class="ui-kit__demo">
+        <span class="badge">Черновик</span>
+        <span class="badge badge--primary">Запланировано</span>
+        <span class="badge badge--success">Завершено</span>
+        <span class="badge badge--warning">Скоро</span>
+        <span class="badge badge--danger">Отменено</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="forms">
+    <h2>05. Поля и формы</h2>
+    <p>Единое оформление для регистрации, входа и создания поездки.</p>
+
+    <div class="card ui-kit__form">
+      <form action="#" onsubmit="return false;">
+        <div>
+          <label for="demo-name">Название поездки</label>
+          <input id="demo-name" type="text" placeholder="Например, Летний отпуск">
+          <p class="field-hint">Короткое название, которое легко узнать.</p>
+        </div>
+
+        <div>
+          <label for="demo-email">Email</label>
+          <input id="demo-email" type="email" placeholder="you@example.com">
+        </div>
+
+        <div>
+          <label for="demo-date">Дата начала</label>
+          <input id="demo-date" type="date">
+        </div>
+
+        <div>
+          <label for="demo-destination">Направление</label>
+          <select id="demo-destination">
+            <option value="">Выбери направление</option>
+            <option>Париж, Франция</option>
+            <option>Рим, Италия</option>
+            <option>Токио, Япония</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="demo-description">Описание</label>
+          <textarea id="demo-description" placeholder="Что хочешь посмотреть?"></textarea>
+        </div>
+
+        <button type="button" class="button">Сохранить пример</button>
+        <p class="field-hint">Демонстрационная форма — данные не отправляются.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="field-states">
+    <h2>06. Состояния полей</h2>
+    <p>Обычное поле, ошибка, успех и недоступное поле.</p>
+
+    <div class="card ui-kit__form">
+      <div>
+        <label for="st-ok">Обычное поле</label>
+        <input id="st-ok" type="text" value="Выходные в Париже">
+      </div>
+
+      <div class="field--error">
+        <label for="st-err">Название поездки</label>
+        <input id="st-err" type="text" aria-invalid="true" aria-describedby="st-err-msg">
+        <p class="field-error" id="st-err-msg">Укажи название поездки.</p>
+      </div>
+
+      <div class="field--success">
+        <label for="st-success">Email</label>
+        <input id="st-success" type="email" value="you@example.com">
+        <p class="field-success">Email подходит.</p>
+      </div>
+
+      <div>
+        <label for="st-dis">Недоступное поле</label>
+        <input id="st-dis" type="text" value="Нельзя редактировать" disabled>
+      </div>
+
+      <p class="field-hint">Рамку фокуса видно при клике в поле или переходе клавишей Tab.</p>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="choices">
+    <h2>07. Элементы выбора</h2>
+    <p>Radio, checkbox и переключатель.</p>
+
+    <div class="card ui-kit__form">
+      <fieldset class="choice-group">
+        <legend>Тип поездки</legend>
+        <label class="choice"><input type="radio" name="demo_trip_type" checked> Отдых</label>
+        <label class="choice"><input type="radio" name="demo_trip_type"> Работа</label>
+        <label class="choice"><input type="radio" name="demo_trip_type"> Поездка к друзьям</label>
+      </fieldset>
+
+      <fieldset class="choice-group">
+        <legend>Что нужно подготовить</legend>
+        <label class="choice"><input type="checkbox" checked> Билеты</label>
+        <label class="choice"><input type="checkbox"> Отель</label>
+        <label class="choice"><input type="checkbox"> Виза</label>
+      </fieldset>
+
+      <label class="switch">
+        <input type="checkbox" role="switch" checked>
+        <span class="switch__track" aria-hidden="true"></span>
+        Напоминать о поездке
+      </label>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="trip-form">
+    <h2>08. Форма поездки с остановками</h2>
+    <p>Остановки добавляются и удаляются без перезагрузки страницы.</p>
+
+    <div class="card ui-kit__form">
+      <form action="#" onsubmit="return false;" data-stops-form>
+        <div>
+          <label for="tf-title">Название поездки</label>
+          <input id="tf-title" type="text" placeholder="Например, Выходные в Париже">
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="tf-start">Дата начала</label>
+            <input id="tf-start" type="date">
+          </div>
+          <div>
+            <label for="tf-end">Дата окончания</label>
+            <input id="tf-end" type="date">
+          </div>
+        </div>
+
+        <div>
+          <label for="tf-notes">Заметки и бюджет</label>
+          <textarea id="tf-notes" placeholder="Свободный ввод: бюджет, идеи, что взять с собой"></textarea>
+        </div>
+
+        <fieldset class="choice-group">
+          <legend>Остановки маршрута</legend>
+          <div class="stops" data-stops-list>
+            <div class="stop-row">
+              <span class="stop-row__number">1</span>
+              <input type="text" name="trip[stops][]" placeholder="Название места" aria-label="Остановка">
+              <button type="button" class="button button--ghost button--small" data-remove-stop aria-label="Удалить остановку">✕</button>
+            </div>
+          </div>
+          <div>
+            <button type="button" class="button button--secondary button--small" data-add-stop>+ Добавить остановку</button>
+          </div>
+        </fieldset>
+
+        <button type="button" class="button">Сохранить поездку</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="alerts">
+    <h2>09. Уведомления</h2>
+    <p>Сообщения об успешных действиях и ошибках.</p>
+
+    <div class="stack">
+      <div class="flash flash--notice" role="status">
+        Поездка успешно создана!
+      </div>
+      <div class="flash flash--alert" role="alert">
+        Не удалось сохранить изменения. Проверь введённые данные.
+      </div>
+      <div class="errors">
+        <strong>Проверь форму:</strong>
+        <ul>
+          <li>Укажи название поездки.</li>
+          <li>Дата окончания не может быть раньше даты начала.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="trip-cards">
+    <h2>10. Карточки поездок</h2>
+    <p>Пример карточек для будущего списка путешествий.</p>
+
+    <div class="card-grid">
+      <article class="trip-card">
+        <div class="inline-actions">
+          <span class="badge badge--primary">Запланировано</span>
+          <span class="badge">5 дней</span>
+        </div>
+        <div>
+          <p class="trip-card__destination">Франция · Европа</p>
+          <h3 class="trip-card__title">Выходные в Париже</h3>
+        </div>
+        <p class="trip-card__dates">20–25 ноября 2026</p>
+        <p>Прогулки по городу, музеи и новые места.</p>
+        <div class="progress" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="Подготовка к поездке">
+          <div class="progress__bar" style="width: 60%;"></div>
+        </div>
+        <p class="muted text-small" style="margin: 0;">Готово 3 из 5 пунктов</p>
+        <div class="trip-card__footer">
+          <a href="#trip-cards">Подробнее →</a>
+          <div class="inline-actions">
+            <button type="button" class="button button--secondary button--small">Редактировать</button>
+            <button type="button" class="button button--ghost button--small">Удалить</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="trip-card">
+        <div class="inline-actions">
+          <span class="badge badge--success">Завершено</span>
+          <span class="badge">3 дня</span>
+        </div>
+        <div>
+          <p class="trip-card__destination">Италия · Европа</p>
+          <h3 class="trip-card__title">Знакомство с Римом</h3>
+        </div>
+        <p class="trip-card__dates">10–13 сентября 2026</p>
+        <p>Исторические достопримечательности и итальянская кухня.</p>
+        <div class="trip-card__footer">
+          <a href="#trip-cards">Подробнее →</a>
+          <span class="muted text-small">Пример данных</span>
+        </div>
+      </article>
+
+      <article class="trip-card trip-card--cancelled">
+        <div class="inline-actions">
+          <span class="badge badge--danger">Отменено</span>
+          <span class="badge">7 дней</span>
+        </div>
+        <div>
+          <p class="trip-card__destination">Япония · Азия</p>
+          <h3 class="trip-card__title">Весна в Токио</h3>
+        </div>
+        <p class="trip-card__dates">1–8 апреля 2027</p>
+        <p>Поездка отменена. Её можно вернуть в черновики.</p>
+        <div class="trip-card__footer">
+          <a href="#trip-cards">Подробнее →</a>
+          <span class="muted text-small">Пример данных</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="route">
+    <h2>11. Маршрут и точки посещения</h2>
+    <p>Компонент для будущего планировщика маршрутов.</p>
+
+    <div class="card">
+      <div class="card__header">
+        <div>
+          <h3 class="card__title">Один день в Париже</h3>
+          <p class="card__description">Демонстрационный маршрут · 3 остановки</p>
+        </div>
+        <span class="badge badge--primary">Пример</span>
+      </div>
+
+      <div class="route-timeline">
+        <div class="route-stop">
+          <span class="route-stop__marker">1</span>
+          <div>
+            <p class="route-stop__title">Эйфелева башня</p>
+            <p class="route-stop__description">09:00 · Начало маршрута</p>
+          </div>
+        </div>
+
+        <div class="route-stop">
+          <span class="route-stop__marker">2</span>
+          <div>
+            <p class="route-stop__title">Лувр</p>
+            <p class="route-stop__description">11:30 · Музей и прогулка</p>
+          </div>
+        </div>
+
+        <div class="route-stop">
+          <span class="route-stop__marker">3</span>
+          <div>
+            <p class="route-stop__title">Латинский квартал</p>
+            <p class="route-stop__description">15:00 · Кафе и отдых</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ui-kit__section" id="empty-state">
+    <h2>12. Пустое состояние</h2>
+    <p>Показывается, когда пользователь ещё не создал поездки.</p>
+
+    <div class="card" style="text-align: center; padding: 40px 24px;">
+      <div style="font-size: 2.5rem; margin-bottom: 12px;" aria-hidden="true">✈</div>
+      <h3>Время для первого путешествия!</h3>
+      <p>Создай первую поездку, чтобы собрать планы в одном месте.</p>
+      <div class="inline-actions" style="justify-content: center;">
+        <% if logged_in? %>
+          <%= link_to "Создать поездку", new_trip_path, class: "button" %>
+        <% else %>
+          <%= link_to "Зарегистрироваться", signup_path, class: "button" %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function () {
+    if (window.__stopsFormBound) return;
+    window.__stopsFormBound = true;
+
+    function renumber(list) {
+      list.querySelectorAll(".stop-row").forEach(function (row, index) {
+        row.querySelector(".stop-row__number").textContent = index + 1;
+      });
+    }
+
+    document.addEventListener("click", function (event) {
+      var addButton = event.target.closest("[data-add-stop]");
+      var removeButton = event.target.closest("[data-remove-stop]");
+
+      if (addButton) {
+        var list = addButton.closest("form").querySelector("[data-stops-list]");
+        var row = list.querySelector(".stop-row").cloneNode(true);
+        row.querySelector("input").value = "";
+        list.appendChild(row);
+        renumber(list);
+        row.querySelector("input").focus();
+      }
+
+      if (removeButton) {
+        var stopsList = removeButton.closest("[data-stops-list]");
+        var rows = stopsList.querySelectorAll(".stop-row");
+        if (rows.length > 1) {
+          removeButton.closest(".stop-row").remove();
+        } else {
+          rows[0].querySelector("input").value = "";
+        }
+        renumber(stopsList);
+      }
+    });
+  })();
+</script>
