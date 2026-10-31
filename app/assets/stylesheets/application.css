@@ -191,8 +191,7 @@ p {
 /* Buttons */
 
 .button,
-input[type="submit"],
-button.button {
+input[type="submit"] {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -210,8 +209,7 @@ button.button {
 }
 
 .button:hover,
-input[type="submit"]:hover,
-button.button:hover {
+input[type="submit"]:hover {
   background: var(--color-primary-hover);
   color: #fff;
 }
