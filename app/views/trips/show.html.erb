@@ -1,39 +1,112 @@
-<h1><%= @trip.name %></h1>
+<p><%= link_to "← Мои поездки", trips_path %></p>
 
-<p>
-  <strong>Направление:</strong>
-  <%= @trip.destination %>
-</p>
+<div class="page-heading">
+  <div>
+    <div class="inline-actions" style="margin-bottom: 10px;">
+      <%= trip_status_badge(@trip) %>
+      <% if @trip.soon? %>
+        <span class="badge badge--warning">Скоро</span>
+      <% end %>
+      <span class="badge"><%= @trip.duration_days %> дн.</span>
+    </div>
+    <h1><%= @trip.name %></h1>
+    <p>
+      <%= @trip.destination %>
+      <% if @trip.start_date && @trip.end_date %>
+        · <%= @trip.start_date.strftime("%d.%m.%Y") %> – <%= @trip.end_date.strftime("%d.%m.%Y") %>
+      <% end %>
+      <% if @trip.budget %>
+        · бюджет <%= @trip.budget.to_i %> ₽
+      <% end %>
+    </p>
+    <% if @trip.description.present? %>
+      <p><%= @trip.description %></p>
+    <% end %>
+  </div>
 
-<p>
-  <strong>Дата начала:</strong>
-  <%= @trip.start_date %>
-</p>
+  <div class="inline-actions">
+    <%= link_to "Редактировать", edit_trip_path(@trip), class: "button button--secondary button--small" %>
+    <%= button_to "Удалить", trip_path(@trip), method: :delete,
+          form: { data: { turbo_confirm: "Удалить поездку?" } },
+          class: "button button--danger button--small" %>
+  </div>
+</div>
 
-<p>
-  <strong>Дата окончания:</strong>
-  <%= @trip.end_date %>
-</p>
+<div class="inline-actions" style="margin-bottom: 24px;">
+  <% if @trip.draft? %>
+    <%= button_to "Запланировать", plan_trip_path(@trip), method: :patch, class: "button button--small" %>
+    <%= button_to "Отменить", cancel_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
+  <% elsif @trip.planned? %>
+    <%= button_to "Завершить", complete_trip_path(@trip), method: :patch, class: "button button--small" %>
+    <%= button_to "Отменить", cancel_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
+  <% elsif @trip.cancelled? %>
+    <%= button_to "Вернуть в черновики", restore_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
+  <% end %>
+</div>
 
-<% if @trip.description.present? %>
-  <p>
-    <strong>Описание:</strong>
-  </p>
+<div class="card-grid">
+  <div class="card">
+    <div class="card__header">
+      <div>
+        <h3 class="card__title">Маршрут</h3>
+        <p class="card__description">Остановки: <%= @trip.stops.size %></p>
+      </div>
+    </div>
 
-  <p>
-    <%= @trip.description %>
-  </p>
-<% end %>
+    <% if @trip.stops.any? %>
+      <div class="route-timeline">
+        <% @trip.stops.each do |stop| %>
+          <div class="route-stop">
+            <span class="route-stop__marker"><%= stop.position %></span>
+            <div>
+              <p class="route-stop__title"><%= stop.name %></p>
+              <%= button_to "Удалить", trip_stop_path(@trip, stop), method: :delete,
+                    class: "button button--ghost button--small" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="muted">Остановок пока нет. Добавь первую ниже.</p>
+    <% end %>
 
-<hr>
+    <%= form_with model: [@trip, Stop.new] do |f| %>
+      <%= f.text_field :name, placeholder: "Название места", "aria-label": "Название места" %>
+      <%= f.button "+ Добавить остановку", class: "button button--secondary button--small", style: "margin-top: 10px;" %>
+    <% end %>
+  </div>
 
-<p>
-  <%= link_to "← Мои поездки", trips_path %>
-</p>
+  <div class="card">
+    <div class="card__header">
+      <div>
+        <h3 class="card__title">Подготовка</h3>
+        <p class="card__description">Готово <%= @trip.progress_percent %>%</p>
+      </div>
+    </div>
 
-<p>
-  <%= button_to "Удалить поездку",
-                trip_path(@trip),
-                method: :delete,
-                data: { turbo_confirm: "Удалить эту поездку?" } %>
-</p>
+    <div class="progress" role="progressbar" aria-valuenow="<%= @trip.progress_percent %>"
+         aria-valuemin="0" aria-valuemax="100" aria-label="Подготовка к поездке">
+      <div class="progress__bar" style="width: <%= @trip.progress_percent %>%;"></div>
+    </div>
+
+    <div class="stack" style="margin: 16px 0;">
+      <% @trip.checklist_items.order(:id).each do |item| %>
+        <div class="inline-actions">
+          <%= button_to "#{item.done? ? '☑' : '☐'} #{item.title}",
+                trip_checklist_item_path(@trip, item), method: :patch,
+                class: "button button--ghost button--small" %>
+          <%= button_to "✕", trip_checklist_item_path(@trip, item), method: :delete,
+                class: "button button--ghost button--small", "aria-label": "Удалить пункт" %>
+        </div>
+      <% end %>
+      <% if @trip.checklist_items.none? %>
+        <p class="muted">Пунктов пока нет. Например: билеты, отель, виза.</p>
+      <% end %>
+    </div>
+
+    <%= form_with model: [@trip, ChecklistItem.new] do |f| %>
+      <%= f.text_field :title, placeholder: "Например, Билеты", "aria-label": "Название пункта" %>
+      <%= f.button "+ Добавить пункт", class: "button button--secondary button--small", style: "margin-top: 10px;" %>
+    <% end %>
+  </div>
+</div>

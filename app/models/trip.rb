@@ -40,6 +40,11 @@ class Trip < ApplicationRecord
     update(status: :cancelled)
   end
 
+  def plan
+    return false unless draft?
+    update(status: :planned)
+  end
+
   # «Её можно вернуть в черновики» из карточки отменённой поездки
   def restore_to_draft
     return false unless cancelled?

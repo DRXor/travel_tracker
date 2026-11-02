@@ -1,0 +1,47 @@
+<div class="card" style="max-width: 640px;">
+  <%= form_with model: trip do |f| %>
+    <% if trip.errors.any? %>
+      <div class="errors">
+        <strong>Проверь форму:</strong>
+        <ul>
+          <% trip.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :name, "Название поездки" %>
+      <%= f.text_field :name, placeholder: "Например, Выходные в Париже" %>
+    </div>
+
+    <div>
+      <%= f.label :destination, "Направление" %>
+      <%= f.text_field :destination, placeholder: "Например, Париж, Франция" %>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <%= f.label :start_date, "Дата начала" %>
+        <%= f.date_field :start_date %>
+      </div>
+      <div>
+        <%= f.label :end_date, "Дата окончания" %>
+        <%= f.date_field :end_date %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :budget, "Бюджет" %>
+      <%= f.number_field :budget, step: 0.01, min: 0 %>
+    </div>
+
+    <div>
+      <%= f.label :description, "Описание" %>
+      <%= f.text_area :description, placeholder: "Что хочешь посмотреть?" %>
+    </div>
+
+    <%= f.submit trip.new_record? ? "Создать поездку" : "Сохранить", class: "button" %>
+  <% end %>
+</div>

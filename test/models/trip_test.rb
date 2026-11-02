@@ -88,4 +88,15 @@ class TripTest < ActiveSupport::TestCase
     @trip.name = ""
     assert_not @trip.valid?
   end
+
+    test "plan переводит черновик в запланированные" do
+    @trip.update!(status: :draft)
+    assert @trip.plan
+    assert @trip.planned?
+  end
+
+  test "plan не работает для завершённой поездки" do
+    @trip.update!(status: :completed)
+    assert_not @trip.plan
+  end
 end

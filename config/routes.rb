@@ -10,5 +10,14 @@ Rails.application.routes.draw do
   post "/login", to: "sessions#create"
   delete "/logout", to: "sessions#destroy"
 
-  resources :trips, only: [:index, :new, :create, :show, :destroy]
+    resources :trips do
+    member do
+      patch :plan
+      patch :complete
+      patch :cancel
+      patch :restore
+    end
+    resources :stops, only: [:create, :destroy]
+    resources :checklist_items, only: [:create, :update, :destroy]
+  end
 end

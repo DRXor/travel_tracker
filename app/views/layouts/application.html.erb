@@ -34,6 +34,9 @@
           <% if logged_in? %>
             <%= link_to "Мои поездки", trips_path, class: "nav-link" %>
             <%= link_to "Новая поездка", new_trip_path, class: "button button--small" %>
+            <%= button_to "Выйти", logout_path, method: :delete,
+            class: "button button--secondary button--small",
+            form: { style: "display: inline;" } %>
           <% else %>
             <%= link_to "Войти", login_path, class: "nav-link" %>
             <%= link_to "Регистрация", signup_path, class: "button button--small" %>

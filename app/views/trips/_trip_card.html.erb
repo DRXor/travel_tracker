@@ -1,7 +1,15 @@
 <article class="trip-card">
+  <div class="inline-actions">
+    <%= trip_status_badge(trip) %>
+    <% if trip.soon? %>
+      <span class="badge badge--warning">Скоро</span>
+    <% end %>
+    <span class="badge"><%= trip.duration_days %> дн.</span>
+  </div>
+
   <div>
     <p class="trip-card__destination">
-      <%= trip.destination %>
+      <%= trip.destination.presence || "Направление не указано" %>
     </p>
 
     <h2 class="trip-card__title">
@@ -16,16 +24,31 @@
   </p>
 
   <% if trip.description.present? %>
-    <p><%= trip.description %></p>
+    <p><%= truncate(trip.description, length: 120) %></p>
+  <% end %>
+
+  <% if trip.checklist_items.any? %>
+    <div class="progress" role="progressbar" aria-valuenow="<%= trip.progress_percent %>"
+         aria-valuemin="0" aria-valuemax="100" aria-label="Подготовка к поездке">
+      <div class="progress__bar" style="width: <%= trip.progress_percent %>%;"></div>
+    </div>
+    <p class="muted text-small" style="margin: 0;">
+      Готово <%= trip.progress_percent %>% · остановок: <%= trip.stops.size %>
+    </p>
+  <% else %>
+    <p class="muted text-small" style="margin: 0;">
+      Остановок: <%= trip.stops.size %> · пунктов подготовки пока нет
+    </p>
   <% end %>
 
   <div class="trip-card__footer">
-    <%= link_to "Подробнее →", trip_path(trip), class: "button button--secondary button--small" %>
+    <%= link_to "Подробнее →", trip_path(trip) %>
 
-    <%= button_to "Удалить",
-                  trip_path(trip),
-                  method: :delete,
-                  class: "button button--danger button--small",
-                  data: { turbo_confirm: "Удалить эту поездку?" } %>
+    <div class="inline-actions">
+      <%= link_to "Редактировать", edit_trip_path(trip), class: "button button--secondary button--small" %>
+      <%= button_to "Удалить", trip_path(trip), method: :delete,
+            form: { data: { turbo_confirm: "Удалить эту поездку?" } },
+            class: "button button--ghost button--small" %>
+    </div>
   </div>
 </article>
