@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_31_174232) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_02_174709) do
   create_table "checklist_items", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.boolean "done", default: false, null: false
@@ -22,6 +22,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_174232) do
 
   create_table "stops", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
     t.string "name", null: false
     t.integer "position", null: false
     t.integer "trip_id", null: false

@@ -1,0 +1,156 @@
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<% end %>
+
+<div class="card" style="margin-bottom: 24px;">
+  <div class="card__header">
+    <div>
+      <h3 class="card__title">Карта маршрута</h3>
+      <p class="card__description">
+        Кликни по карте или найди место по названию, затем нажми «Добавить остановку».
+        <% if trip.route_distance_km > 0 %>
+          Маршрут по прямой: ≈ <%= trip.route_distance_km %> км.
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+  <%= tag.div "", id: "trip-map", class: "trip-map",
+        data: { points: trip.located_stops.map { |s|
+          { name: s.name, position: s.position, lat: s.latitude.to_f, lng: s.longitude.to_f }
+        } } %>
+
+  <div class="inline-actions" style="margin-top: 14px;">
+    <input type="text" id="map-search" placeholder="Найти место, например: Эйфелева башня"
+           style="flex: 1; min-width: 220px;">
+    <button type="button" id="map-search-button" class="button button--secondary">Найти</button>
+  </div>
+  <div id="map-results" class="stack" style="margin-top: 10px;"></div>
+
+  <%= form_with model: [trip, Stop.new] do |f| %>
+    <%= f.hidden_field :latitude %>
+    <%= f.hidden_field :longitude %>
+    <div style="margin-top: 14px;">
+      <%= f.label :name, "Название остановки" %>
+      <%= f.text_field :name, placeholder: "Заполнится после клика по карте или поиска" %>
+      <p class="field-hint" id="map-selected">Точка на карте не выбрана.</p>
+    </div>
+    <%= f.button "+ Добавить остановку", class: "button" %>
+  <% end %>
+</div>
+
+<script>
+  (function () {
+    function start() {
+      if (!window.L) { return setTimeout(start, 50); }
+
+      var el = document.getElementById("trip-map");
+      if (!el || el._leaflet_id) { return; }
+
+      var points = JSON.parse(el.dataset.points || "[]");
+      var nameInput = document.getElementById("stop_name");
+      var latInput = document.getElementById("stop_latitude");
+      var lngInput = document.getElementById("stop_longitude");
+      var hint = document.getElementById("map-selected");
+      var searchInput = document.getElementById("map-search");
+      var results = document.getElementById("map-results");
+      var lastAuto = "";
+      var preview = null;
+
+      var map = L.map(el).setView([50, 20], 3);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      // Остановки маршрута: нумерованные маркеры и линия между ними
+      var latlngs = points.map(function (p) { return [p.lat, p.lng]; });
+      points.forEach(function (p) {
+        var popup = document.createElement("div");
+        popup.textContent = p.position + ". " + p.name;
+        L.marker([p.lat, p.lng], {
+          icon: L.divIcon({
+            className: "map-marker",
+            html: "<span>" + p.position + "</span>",
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+          })
+        }).addTo(map).bindPopup(popup);
+      });
+      if (latlngs.length > 1) {
+        L.polyline(latlngs, { color: "#5754d9", weight: 4, opacity: 0.8 }).addTo(map);
+        map.fitBounds(latlngs, { padding: [40, 40] });
+      } else if (latlngs.length === 1) {
+        map.setView(latlngs[0], 10);
+      }
+
+      // Выбор новой точки
+      function setPoint(lat, lng, reverse) {
+        latInput.value = lat.toFixed(6);
+        lngInput.value = lng.toFixed(6);
+        if (!preview) {
+          preview = L.circleMarker([lat, lng], { radius: 9, color: "#bd3535", weight: 3, fillOpacity: 0.5 }).addTo(map);
+        } else {
+          preview.setLatLng([lat, lng]);
+        }
+        hint.textContent = "Выбрана точка: " + lat.toFixed(4) + ", " + lng.toFixed(4);
+        if (reverse) { lookupName(lat, lng); }
+      }
+
+      // Подбор названия по координатам (один запрос на клик)
+      function lookupName(lat, lng) {
+        fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&accept-language=ru&lat=" + lat + "&lon=" + lng)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var label = data.name || (data.display_name || "").split(",")[0];
+            if (label && (!nameInput.value || nameInput.value === lastAuto)) {
+              nameInput.value = label;
+              lastAuto = label;
+            }
+          })
+          .catch(function () {});
+      }
+
+      map.on("click", function (e) { setPoint(e.latlng.lat, e.latlng.lng, true); });
+
+      // Поиск по названию (по кнопке или Enter)
+      function search() {
+        var q = searchInput.value.trim();
+        if (!q) { return; }
+        results.textContent = "Ищем…";
+        fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&accept-language=ru&q=" + encodeURIComponent(q))
+          .then(function (r) { return r.json(); })
+          .then(function (items) {
+            results.textContent = "";
+            if (!items.length) { results.textContent = "Ничего не найдено."; return; }
+            items.forEach(function (item) {
+              var b = document.createElement("button");
+              b.type = "button";
+              b.className = "button button--ghost button--small";
+              b.style.justifyContent = "flex-start";
+              b.textContent = item.display_name;
+              b.addEventListener("click", function () {
+                var lat = parseFloat(item.lat), lng = parseFloat(item.lon);
+                var label = item.name || item.display_name.split(",")[0];
+                nameInput.value = label;
+                lastAuto = label;
+                setPoint(lat, lng, false);
+                map.setView([lat, lng], 13);
+                results.textContent = "";
+              });
+              results.appendChild(b);
+            });
+          })
+          .catch(function () { results.textContent = "Не удалось выполнить поиск."; });
+      }
+
+      document.getElementById("map-search-button").addEventListener("click", search);
+      searchInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); search(); }
+      });
+    }
+    start();
+  })();
+</script>

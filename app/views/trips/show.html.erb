@@ -44,6 +44,7 @@
   <% end %>
 </div>
 
+<%= render "map", trip: @trip %>
 <div class="card-grid">
   <div class="card">
     <div class="card__header">
@@ -68,11 +69,6 @@
       </div>
     <% else %>
       <p class="muted">Остановок пока нет. Добавь первую ниже.</p>
-    <% end %>
-
-    <%= form_with model: [@trip, Stop.new] do |f| %>
-      <%= f.text_field :name, placeholder: "Название места", "aria-label": "Название места" %>
-      <%= f.button "+ Добавить остановку", class: "button button--secondary button--small", style: "margin-top: 10px;" %>
     <% end %>
   </div>
 

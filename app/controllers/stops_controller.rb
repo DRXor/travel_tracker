@@ -3,7 +3,7 @@ class StopsController < ApplicationController
   before_action :set_trip
 
   def create
-    stop = @trip.stops.build(params.require(:stop).permit(:name))
+    stop = @trip.stops.build(params.require(:stop).permit(:name, :latitude, :longitude))
 
     if stop.save
       redirect_to trip_path(@trip), notice: "Остановка добавлена."

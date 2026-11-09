@@ -45,4 +45,35 @@ class StopTest < ActiveSupport::TestCase
   test "название остановки обязательно" do
     assert_not @trip.stops.build(name: "").valid?
   end
+
+    # --- контекст: перенумерация одним запросом ---
+
+  test "после удаления первой остановки остальные сдвигаются на 1" do
+    stops = %w[А Б В Г].map { |name| @trip.stops.create!(name: name) }
+    stops.first.destroy
+
+    assert_equal %w[Б В Г], @trip.stops.reload.map(&:name)
+    assert_equal [1, 2, 3], @trip.stops.map(&:position)
+  end
+
+  test "удаление последней остановки не меняет остальные" do
+    stops = %w[А Б В].map { |name| @trip.stops.create!(name: name) }
+    stops.last.destroy
+
+    assert_equal [1, 2], @trip.stops.reload.map(&:position)
+  end
+
+  test "перенумерация делает ровно один UPDATE независимо от числа остановок" do
+    stops = 10.times.map { |i| @trip.stops.create!(name: "Точка #{i}") }
+
+    updates = []
+    callback = lambda do |_name, _start, _finish, _id, payload|
+      updates << payload[:sql] if payload[:sql].start_with?("UPDATE")
+    end
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      stops.first.destroy
+    end
+
+    assert_equal 1, updates.size
+  end
 end
