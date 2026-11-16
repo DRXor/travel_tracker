@@ -57,6 +57,24 @@ erDiagram
         string title
         boolean done
     }
+    TRIP ||--o{ TRIP_MEMBERSHIP : "has many"
+    USER ||--o{ TRIP_MEMBERSHIP : "joins"
+    TRIP ||--o{ EXPENSE : "has many"
+    USER ||--o{ EXPENSE : "pays"
+    TRIP_MEMBERSHIP {
+        bigint id PK
+        bigint trip_id FK
+        bigint user_id FK
+    }
+    EXPENSE {
+        bigint id PK
+        bigint trip_id FK
+        bigint user_id FK
+        string title
+        decimal amount
+        integer category "0 transport, 1 lodging, 2 food, 3 entertainment, 4 other"
+        date spent_on
+    }
 ```
 
 ## Модели

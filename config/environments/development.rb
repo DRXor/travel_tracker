@@ -1,6 +1,12 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+
+  # Разрешаем WebSocket-подключения из Codespaces
+  config.action_cable.allowed_request_origins = [
+    %r{https://.*\.app\.github\.dev},
+    %r{http://localhost:\d+}
+  ]
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Make code changes take effect immediately without server restart.

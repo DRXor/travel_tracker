@@ -1,0 +1,16 @@
+<%= turbo_frame_tag dom_id(comment) do %>
+  <div class="comment">
+    <div class="comment__meta">
+      <strong><%= comment.user.name %></strong>
+      <span class="muted text-small"><%= comment.created_at.strftime("%d.%m.%Y %H:%M") %></span>
+    </div>
+    <%= simple_format(comment.body) %>
+    <div class="inline-actions">
+      <%= link_to "Изменить", edit_trip_comment_path(comment.trip_id, comment),
+            class: "button button--ghost button--small" %>
+      <%= link_to "Удалить", trip_comment_path(comment.trip_id, comment),
+            data: { turbo_method: :delete, turbo_confirm: "Удалить комментарий?", turbo_frame: "_top" },
+            class: "button button--ghost button--small" %>
+    </div>
+  </div>
+<% end %>

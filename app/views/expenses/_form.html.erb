@@ -1,0 +1,36 @@
+<div id="expense_form">
+  <%= form_with model: [trip, expense] do |f| %>
+    <% if expense.errors.any? %>
+      <div class="errors">
+        <ul>
+          <% expense.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :title, "На что потратили" %>
+      <%= f.text_field :title, placeholder: "Например, билеты на поезд" %>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <%= f.label :amount, "Сумма, ₽" %>
+        <%= f.number_field :amount, step: 0.01, min: 0.01 %>
+      </div>
+      <div>
+        <%= f.label :category, "Категория" %>
+        <%= f.select :category, Expense::CATEGORY_LABELS.map { |key, label| [label, key] } %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :spent_on, "Дата" %>
+      <%= f.date_field :spent_on %>
+    </div>
+
+    <%= f.button "Добавить расход", class: "button" %>
+  <% end %>
+</div>

@@ -1,9 +1,10 @@
 class TripsController < ApplicationController
   before_action :require_login
-  before_action :set_trip, only: [:show, :edit, :update, :destroy, :plan, :complete, :cancel, :restore]
+  before_action :set_trip, only: [:show]
+  before_action :set_owned_trip, only: [:edit, :update, :destroy, :plan, :complete, :cancel, :restore]
 
   def index
-    @trips = current_user.trips.order(start_date: :asc)
+    @trips = current_user.accessible_trips.order(start_date: :asc)
   end
 
   def new
@@ -58,6 +59,10 @@ class TripsController < ApplicationController
   private
 
   def set_trip
+    @trip = current_user.accessible_trips.find(params[:id])
+  end
+
+  def set_owned_trip
     @trip = current_user.trips.find(params[:id])
   end
 

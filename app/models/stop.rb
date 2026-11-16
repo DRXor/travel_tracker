@@ -28,8 +28,7 @@ class Stop < ApplicationRecord
     self.position ||= (trip.stops.maximum(:position) || 0) + 1
   end
 
-  # Закрываем «дырку» в нумерации одним UPDATE: все остановки правее
-  # удалённой сдвигаются на единицу влево.
+  # Закрываем «дырку» в нумерации одним UPDATE: все остановки правее удалённой сдвигаются на единицу влево.
   def close_position_gap
     return if destroyed_by_association
 

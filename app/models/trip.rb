@@ -5,6 +5,10 @@ class Trip < ApplicationRecord
   belongs_to :user
   has_many :stops, -> { order(:position) }, dependent: :destroy
   has_many :checklist_items, dependent: :destroy
+  has_many :trip_memberships, dependent: :destroy
+  has_many :members, through: :trip_memberships, source: :user
+  has_many :expenses, -> { order(spent_on: :desc, id: :desc) }, dependent: :destroy
+  has_many :comments, -> { order(:created_at) }, dependent: :destroy
 
   enum :status, { draft: 0, planned: 1, completed: 2, cancelled: 3 }
 
@@ -64,6 +68,54 @@ class Trip < ApplicationRecord
     points.each_cons(2).sum { |a, b| haversine_km(a, b) }.round(1)
   end
 
+    # --- участники ---
+
+  def owner?(person)
+    person.present? && user_id == person.id
+  end
+
+  def participant?(person)
+    return false if person.blank?
+    owner?(person) || trip_memberships.exists?(user_id: person.id)
+  end
+
+  def participants
+    [user, *members]
+  end
+
+  # --- бюджет ---
+
+  def total_spent
+    expense_scope.sum(:amount)
+  end
+
+  def remaining_budget
+    budget && budget - total_spent
+  end
+
+  def over_budget?
+    budget.present? && total_spent > budget
+  end
+
+  # Процент для полоски (не больше 100)
+  def budget_used_percent
+    return 0 if budget.blank? || budget.zero?
+    [(total_spent * 100 / budget).round, 100].min
+  end
+
+  def spent_by_category
+    expense_scope.group(:category).sum(:amount)
+  end
+
+  # Баланс каждого участника: плюс — ему должны, минус — он должен.
+  # Суммы берутся одним запросом на всех, без запросов в цикле.
+  def balances
+    paid = expense_scope.group(:user_id).sum(:amount)
+    people = participants
+    share = paid.values.sum / people.size
+    people.to_h { |person| [person, (paid.fetch(person.id, 0) - share).round(2)] }
+  end
+
   private
 
   def end_date_not_before_start_date
@@ -78,5 +130,10 @@ class Trip < ApplicationRecord
     h = Math.sin(dlat / 2)**2 +
         Math.cos(a.latitude.to_f * rad) * Math.cos(b.latitude.to_f * rad) * Math.sin(dlon / 2)**2
     2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h))
+  end
+
+    # Агрегаты считаем по таблице напрямую: у ассоциации есть сортировка, она мешает группировке
+  def expense_scope
+    Expense.where(trip_id: id)
   end
 end

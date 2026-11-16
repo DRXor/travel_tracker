@@ -1,0 +1,15 @@
+<div class="expense" id="<%= dom_id(expense) %>">
+  <div class="expense__top">
+    <div class="comment__meta">
+      <strong><%= expense.title %></strong>
+      <span class="badge"><%= expense.category_label %></span>
+    </div>
+    <strong><%= money(expense.amount) %></strong>
+  </div>
+  <p class="muted text-small" style="margin: 6px 0 8px;">
+    <%= expense.spent_on.strftime("%d.%m.%Y") %> · заплатил(а) <%= expense.user.name %>
+  </p>
+  <%= link_to "Удалить", trip_expense_path(expense.trip_id, expense),
+        data: { turbo_method: :delete, turbo_confirm: "Удалить расход?" },
+        class: "button button--ghost button--small" %>
+</div>

@@ -1,0 +1,46 @@
+<div id="budget_summary" class="stack">
+  <p style="margin: 0;">
+    Потрачено: <strong><%= money(trip.total_spent) %></strong>
+    <% if trip.budget.present? %> из <%= money(trip.budget) %><% end %>
+  </p>
+
+  <% if trip.budget.present? %>
+    <div class="progress" role="progressbar" aria-valuenow="<%= trip.budget_used_percent %>"
+         aria-valuemin="0" aria-valuemax="100" aria-label="Использовано бюджета">
+      <div class="progress__bar <%= 'progress__bar--over' if trip.over_budget? %>"
+           style="width: <%= trip.budget_used_percent %>%;"></div>
+    </div>
+    <% if trip.over_budget? %>
+      <span class="badge badge--danger">Превышение на <%= money(-trip.remaining_budget) %></span>
+    <% else %>
+      <span class="badge badge--success">Осталось <%= money(trip.remaining_budget) %></span>
+    <% end %>
+  <% else %>
+    <p class="muted text-small" style="margin: 0;">Бюджет не задан: укажите его при редактировании поездки.</p>
+  <% end %>
+
+  <% by_category = trip.spent_by_category %>
+  <% if by_category.any? %>
+    <div class="inline-actions">
+      <% by_category.each do |category, sum| %>
+        <span class="badge"><%= Expense::CATEGORY_LABELS[category] %>: <%= money(sum) %></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <p class="field-label">Баланс участников</p>
+    <% trip.balances.each do |person, balance| %>
+      <p style="margin: 0 0 4px;">
+        <%= person.name %>:
+        <% if balance.positive? %>
+          ему должны <strong><%= money(balance) %></strong>
+        <% elsif balance.negative? %>
+          должен(а) <strong><%= money(-balance) %></strong>
+        <% else %>
+          в расчёте
+        <% end %>
+      </p>
+    <% end %>
+  </div>
+</div>

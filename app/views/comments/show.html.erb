@@ -1,0 +1,12 @@
+<%= turbo_stream_from @trip %>
+
+<div class="card" style="margin-top: 24px;">
+  <%= render "comments/header", trip: @trip %>
+
+  <div id="comments" class="stack" style="margin-bottom: 20px;">
+    <%= render partial: "comments/comment",
+               collection: @trip.comments.includes(:user), as: :comment %>
+  </div>
+
+  <%= render "comments/form", trip: @trip, comment: Comment.new %>
+</div>

@@ -1,0 +1,17 @@
+<div class="card" style="margin-top: 24px;">
+  <div class="card__header">
+    <div>
+      <h3 class="card__title">Семейный бюджет</h3>
+      <p class="card__description">Расходы видят все участники, и итоги обновляются сразу.</p>
+    </div>
+  </div>
+
+  <%= render "trips/budget_summary", trip: trip %>
+
+  <h4 style="margin-top: 20px;">Расходы</h4>
+  <div id="expenses" class="stack" style="margin-bottom: 20px;">
+    <%= render partial: "expenses/expense", collection: trip.expenses.includes(:user), as: :expense %>
+  </div>
+
+  <%= render "expenses/form", trip: trip, expense: Expense.new(spent_on: Date.current) %>
+</div>

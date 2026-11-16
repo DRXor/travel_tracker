@@ -707,3 +707,43 @@ form input[type="submit"] {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Comments */
+
+.comment {
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.comment__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.comment p {
+  margin: 6px 0 10px;
+}
+
+/* Budget */
+
+.expense {
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.expense__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.progress__bar--over {
+  background: var(--color-danger);
+}

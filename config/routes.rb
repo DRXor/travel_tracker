@@ -19,5 +19,8 @@ Rails.application.routes.draw do
     end
     resources :stops, only: [:create, :destroy]
     resources :checklist_items, only: [:create, :update, :destroy]
+    resources :expenses, only: [:create, :destroy]
+    resources :memberships, controller: "trip_memberships", only: [:create, :destroy]
+    resources :comments, only: [:create, :edit, :update, :destroy]
   end
 end

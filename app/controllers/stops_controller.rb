@@ -20,6 +20,6 @@ class StopsController < ApplicationController
   private
 
   def set_trip
-    @trip = current_user.trips.find(params[:trip_id])
+    @trip = current_user.accessible_trips.find(params[:trip_id])
   end
 end

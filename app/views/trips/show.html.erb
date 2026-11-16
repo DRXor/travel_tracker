@@ -16,7 +16,7 @@
         · <%= @trip.start_date.strftime("%d.%m.%Y") %> – <%= @trip.end_date.strftime("%d.%m.%Y") %>
       <% end %>
       <% if @trip.budget %>
-        · бюджет <%= @trip.budget.to_i %> ₽
+        · бюджет <%= money(@trip.budget) %>
       <% end %>
     </p>
     <% if @trip.description.present? %>
@@ -24,27 +24,32 @@
     <% end %>
   </div>
 
-  <div class="inline-actions">
-    <%= link_to "Редактировать", edit_trip_path(@trip), class: "button button--secondary button--small" %>
-    <%= button_to "Удалить", trip_path(@trip), method: :delete,
-          form: { data: { turbo_confirm: "Удалить поездку?" } },
-          class: "button button--danger button--small" %>
-  </div>
-</div>
-
-<div class="inline-actions" style="margin-bottom: 24px;">
-  <% if @trip.draft? %>
-    <%= button_to "Запланировать", plan_trip_path(@trip), method: :patch, class: "button button--small" %>
-    <%= button_to "Отменить", cancel_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
-  <% elsif @trip.planned? %>
-    <%= button_to "Завершить", complete_trip_path(@trip), method: :patch, class: "button button--small" %>
-    <%= button_to "Отменить", cancel_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
-  <% elsif @trip.cancelled? %>
-    <%= button_to "Вернуть в черновики", restore_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
+  <% if @trip.owner?(current_user) %>
+    <div class="inline-actions">
+      <%= link_to "Редактировать", edit_trip_path(@trip), class: "button button--secondary button--small" %>
+      <%= button_to "Удалить", trip_path(@trip), method: :delete,
+            form: { data: { turbo_confirm: "Удалить поездку?" } },
+            class: "button button--danger button--small" %>
+    </div>
   <% end %>
 </div>
 
+<% if @trip.owner?(current_user) %>
+  <div class="inline-actions" style="margin-bottom: 24px;">
+    <% if @trip.draft? %>
+      <%= button_to "Запланировать", plan_trip_path(@trip), method: :patch, class: "button button--small" %>
+      <%= button_to "Отменить", cancel_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
+    <% elsif @trip.planned? %>
+      <%= button_to "Завершить", complete_trip_path(@trip), method: :patch, class: "button button--small" %>
+      <%= button_to "Отменить", cancel_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
+    <% elsif @trip.cancelled? %>
+      <%= button_to "Вернуть в черновики", restore_trip_path(@trip), method: :patch, class: "button button--secondary button--small" %>
+    <% end %>
+  </div>
+<% end %>
+
 <%= render "map", trip: @trip %>
+
 <div class="card-grid">
   <div class="card">
     <div class="card__header">
@@ -106,3 +111,9 @@
     <% end %>
   </div>
 </div>
+
+<%# Подписка на живые обновления этой поездки (WebSocket) %>
+<%= turbo_stream_from @trip %>
+
+<%= render "trip_memberships/members", trip: @trip %>
+<%= render "expenses/section", trip: @trip %>

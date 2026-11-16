@@ -1,0 +1,37 @@
+<div class="card" style="margin-top: 24px;">
+  <div class="card__header">
+    <div>
+      <h3 class="card__title">Участники</h3>
+      <p class="card__description">Видят поездку, добавляют остановки, расходы и комментарии.</p>
+    </div>
+  </div>
+
+  <div class="stack" style="margin-bottom: 16px;">
+    <div class="inline-actions">
+      <strong><%= trip.user.name %></strong>
+      <span class="badge badge--primary">Владелец</span>
+    </div>
+
+    <% trip.trip_memberships.includes(:user).each do |membership| %>
+      <div class="inline-actions">
+        <span><%= membership.user.name %></span>
+        <% if trip.owner?(current_user) || membership.user_id == current_user.id %>
+          <%= button_to (membership.user_id == current_user.id ? "Выйти" : "Убрать"),
+                trip_membership_path(trip, membership), method: :delete,
+                class: "button button--ghost button--small" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if trip.owner?(current_user) %>
+    <%= form_with url: trip_memberships_path(trip) do |f| %>
+      <div>
+        <%= f.label :email, "Email участника" %>
+        <%= f.email_field :email, placeholder: "partner@example.com" %>
+        <p class="field-hint">Участник должен быть уже зарегистрирован в TravelTracker.</p>
+      </div>
+      <%= f.button "Добавить участника", class: "button button--secondary" %>
+    <% end %>
+  <% end %>
+</div>
