@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       patch :complete
       patch :cancel
       patch :restore
+      get :place_recommendations, to: "place_recommendations#index"
     end
     resources :stops, only: [:create, :destroy]
     resources :checklist_items, only: [:create, :update, :destroy]

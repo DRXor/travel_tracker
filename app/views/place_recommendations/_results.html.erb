@@ -1,0 +1,52 @@
+<%= turbo_frame_tag "place_recommendations" do %>
+  <div class="card" style="margin: 24px 0;">
+    <div class="card__header">
+      <div>
+        <h3 class="card__title">Интересные места поблизости</h3>
+        <p class="card__description">
+          Найди достопримечательности, музеи, кафе и парки в городе назначения.
+        </p>
+      </div>
+    </div>
+
+    <%= form_with url: place_recommendations_trip_path(trip),
+                  method: :get do |f| %>
+      <%= f.submit "Найти интересные места",
+            class: "button button--secondary" %>
+    <% end %>
+
+    <% if error.present? %>
+      <p class="muted" style="margin-top: 16px;"><%= error %></p>
+
+    <% elsif places.present? %>
+      <div class="stack" style="margin-top: 20px;">
+        <% places.each do |place| %>
+          <div class="inline-actions" style="justify-content: space-between;">
+            <div>
+              <p class="route-stop__title"><%= place[:name] %></p>
+              <p class="muted">
+                <%= place[:category] %>
+              </p>
+            </div>
+
+            <%= form_with url: trip_stops_path(trip),
+              method: :post,
+              data: { turbo_frame: "_top" } do |f| %>
+              <%= hidden_field_tag "stop[name]", place[:name] %>
+              <%= hidden_field_tag "stop[latitude]", place[:latitude] %>
+              <%= hidden_field_tag "stop[longitude]", place[:longitude] %>
+
+              <%= f.submit "Добавить в маршрут",
+                    class: "button button--small" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+    <% elsif places == [] %>
+      <p class="muted" style="margin-top: 16px;">
+        Поблизости не найдено интересных мест.
+      </p>
+    <% end %>
+  </div>
+<% end %>

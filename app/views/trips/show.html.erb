@@ -50,6 +50,11 @@
 
 <%= render "map", trip: @trip %>
 
+<%= render "place_recommendations/results",
+      trip: @trip,
+      places: nil,
+      error: nil %>
+
 <div class="card-grid">
   <div class="card">
     <div class="card__header">
