@@ -122,3 +122,18 @@
 
 <%= render "trip_memberships/members", trip: @trip %>
 <%= render "expenses/section", trip: @trip %>
+<section class="card" style="margin-top: 24px;">
+  <%= render "comments/header", trip: @trip %>
+
+  <div id="comments" class="stack">
+    <% @trip.comments.each do |comment| %>
+      <%= render "comments/comment", comment: comment %>
+    <% end %>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <%= render "comments/form",
+          trip: @trip,
+          comment: @trip.comments.build %>
+  </div>
+</section>
